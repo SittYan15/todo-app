@@ -7,13 +7,20 @@
 # CMD ["node", "src/index.js"]
 
 
-FROM node:18-alpine
+FROM node:18
 
 WORKDIR /app
 
+# Install build tools and create python alias
+RUN apt-get update && apt-get install -y python3 make g++ \
+    && ln -s /usr/bin/python3 /usr/bin/python
+
+# Skip puppeteer chromium download
+ENV PUPPETEER_SKIP_DOWNLOAD=true
+
 COPY package*.json ./
 
-RUN npm install --only=production
+RUN npm install
 
 COPY . .
 
