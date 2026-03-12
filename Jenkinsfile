@@ -46,13 +46,27 @@ pipeline {
         stage('Build') {
             steps {
                 script {
-                    def dockerTool = tool 'docker' // Matches the name in Global Tool Configuration
-                    withEnv(["PATH+DOCKER=${dockerTool}/bin"]) {
-                        sh 'docker build -t ${DOCKER_HUB_USER}/${IMAGE_NAME}:latest .'
+                    // This 'docker' name MUST match exactly what you named it 
+                    // in Manage Jenkins -> Tools -> Docker Installations
+                    def dockerHome = tool 'docker' 
+                    
+                    withEnv(["PATH+DOCKER=${dockerHome}/bin"]) {
+                        sh 'docker build -t sittyan/todo-app:latest .'
                     }
                 }
             }
         }
+
+        // stage('Build') {
+        //     steps {
+        //         script {
+        //             def dockerTool = tool 'docker' // Matches the name in Global Tool Configuration
+        //             withEnv(["PATH+DOCKER=${dockerTool}/bin"]) {
+        //                 sh 'docker build -t ${DOCKER_HUB_USER}/${IMAGE_NAME}:latest .'
+        //             }
+        //         }
+        //     }
+        // }
 
         stage('Push') {
             steps {
