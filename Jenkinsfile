@@ -45,7 +45,12 @@ pipeline {
 
         stage('Build') {
             steps {
-                sh 'docker build -t ${DOCKER_HUB_USER}/${IMAGE_NAME}:latest .'
+                script {
+                    def dockerTool = tool 'docker' // Matches the name in Global Tool Configuration
+                    withEnv(["PATH+DOCKER=${dockerTool}/bin"]) {
+                        sh 'docker build -t ${DOCKER_HUB_USER}/${IMAGE_NAME}:latest .'
+                    }
+                }
             }
         }
 
